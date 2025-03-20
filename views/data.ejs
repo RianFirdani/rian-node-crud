@@ -1,0 +1,223 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="display-4">Your Data</h1>
+      <!-- Button trigger modal -->
+      <button
+        type="button"
+        class="btn btn-primary mb-2"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Add Data
+      </button>
+      <% if (error.length > 0) { %>
+      <div class="alert alert-danger" style="width: fit-content" role="alert">
+        <ul>
+          <% error.forEach(e => { %>
+          <li><%= e.msg %></li>
+          <% }) %>
+        </ul>
+      </div>
+      <% } %> <% if (msg.length > 0) { %>
+      <div class="alert alert-success" style="width: fit-content" role="alert">
+        <%= msg %>
+      </div>
+      <% } %> <% if (datas.length < 1) { %>
+      <div
+        class="alert alert-secondary"
+        style="width: fit-content"
+        role="alert"
+      >
+        You dont have any data!!
+      </div>
+      <% }else{ %>
+      <table class="table text-center">
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <% datas.forEach((e,i) => { %>
+          <tr>
+            <th scope="row"><%= i+1 %></th>
+            <td><%= e.name %></td>
+            <td><%= e.phoneNumber %></td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-info badge rounded-pill"
+                data-bs-toggle="modal"
+                data-bs-target="#detailModal<%=e.name.replace(/\s+/g, '-')%>"
+              >
+                <i class="fas fa-fw fa-circle-info"></i> Detail
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger badge rounded-pill"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteModal<%=e.name.replace(/\s+/g, '-')%>"
+              >
+                <i class="fas fa-fw fa-trash"></i> Delete
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning badge rounded-pill"
+                data-bs-toggle="modal"
+                data-bs-target="#editModal<%=e.name.replace(/\s+/g, '-')%>"
+              >
+                <i class="fas fa-fw fa-pencil"></i> Edit
+              </button>
+              <!-- Modal Detail -->
+              <div class="modal fade" id="detailModal<%=e.name.replace(/\s+/g, '-')%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Data</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <ul style="list-style: none;">
+                        <li>Name : <%= e.name %></li>
+                        <li>Email : <%= e.email %></li>
+                        <li>Phone Number : <%= e.phoneNumber %></li>
+                      </ul>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal Hapus -->
+              <div class="modal fade" id="deleteModal<%=e.name.replace(/\s+/g, '-')%>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/delete" method="post">
+                    <div class="modal-body">
+                            <input type="hidden" name="name" value="<%=e.name%>">
+                            <p>Did you really wanna delete <%= e.name %> Data ??</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="Submit" class="btn btn-danger">Delete Data</button>
+                    </div>
+                </form>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal Edit -->
+              <div
+              class="modal fade text-lg-start"
+              id="editModal<%=e.name.replace(/\s+/g, '-')%>"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Data</h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <form action="/edit" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="oldName" value="<%=e.name ||  e.oldName %>">
+                      <div class="form-group">
+                        <label for="name" class="form-label">Name : </label>
+                        <input type="text" name="name" class="form-control" id="" value="<%= e.name %>" />
+                      </div>
+                      <div class="form-group">
+                        <label for="email" class="form-label">Email : </label>
+                        <input type="email" name="email" class="form-control" id="" value="<%= e.email %>"  />
+                      </div>
+                      <div class="form-group">
+                        <label for="noHP" class="form-label"> Phone Number : </label>
+                        <input type="text" name="phoneNumber" class="form-control" id="" value="<%= e.phoneNumber %>"  />
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                      <button type="submit" class="btn btn-primary">Save Data</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Data</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <form action="/add" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name" class="form-label">Name : </label>
+            <input type="text" name="name" class="form-control" id="" />
+          </div>
+          <div class="form-group">
+            <label for="email" class="form-label">Email : </label>
+            <input type="email" name="email" class="form-control" id="" />
+          </div>
+          <div class="form-group">
+            <label for="noHP" class="form-label"> Phone Number : </label>
+            <input type="text" name="phoneNumber" class="form-control" id="" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Save Data</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
