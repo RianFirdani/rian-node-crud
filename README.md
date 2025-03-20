@@ -2,7 +2,7 @@
 -nodemon
 -express
 -ejs
--express-ejs-layout
+-express-ejs-layouts
 -express-validator
 -cookieparser
 -express-session
